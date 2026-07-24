@@ -1,7 +1,18 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
   <Fragment>
+    <!--
+      Install location: Program Files\SiCo\Task Separator 11
+      (matches the old .vdproj default of [ProgramFilesFolder][Manufacturer]\[ProductName]).
+      ProgramFiles6432Folder resolves to the native "Program Files" for the package platform.
+    -->
     <StandardDirectory Id="ProgramFiles6432Folder">
-      <Directory Id="INSTALLFOLDER" Name="!(bind.Property.Manufacturer) !(bind.Property.ProductName)" />
+      <Directory Id="ManufacturerFolder" Name="!(bind.Property.Manufacturer)">
+        <Directory Id="INSTALLFOLDER" Name="!(bind.Property.ProductName)" />
+      </Directory>
     </StandardDirectory>
+
+    <!-- Shortcut destinations -->
+    <StandardDirectory Id="ProgramMenuFolder" />
+    <StandardDirectory Id="DesktopFolder" />
   </Fragment>
 </Wix>

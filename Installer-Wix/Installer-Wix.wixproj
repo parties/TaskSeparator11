@@ -1,2 +1,21 @@
-﻿<Project Sdk="WixToolset.Sdk/7.0.0">
+<Project Sdk="WixToolset.Sdk/7.0.0">
+
+  <!--
+    Reference the application project so it is built first and its output directory is
+    exposed to the WiX preprocessor as $(var.TaskSplitter11.TargetDir) (used by the
+    <Files> harvest in AppComponents.wxs).
+
+    NOTE: TaskSplitter11 has a COM reference (IWshRuntimeLibrary), whose ResolveComReference
+    task only runs under .NET Framework MSBuild. Build this installer from Visual Studio or
+    with MSBuild.exe, NOT with "dotnet build".
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\TaskSplitter11\TaskSplitter11.csproj" />
+  </ItemGroup>
+
+  <!-- Provides netfx:DotNetCompatibilityCheck (the .NET Desktop Runtime launch condition). -->
+  <ItemGroup>
+    <PackageReference Include="WixToolset.Netfx.wixext" Version="7.0.0" />
+  </ItemGroup>
+
 </Project>
