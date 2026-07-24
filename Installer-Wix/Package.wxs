@@ -26,9 +26,9 @@
     <MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeError)" />
 
     <!--
-      Require the .NET Desktop Runtime that the app targets (net6.0-windows).
+      Require the .NET Desktop Runtime that the app targets (net10.0-windows).
       The check sets DOTNETRUNTIMECHECK to "0" when a compatible runtime is found.
-      RollForward="minor" keeps it within major 6 (any 6.x), matching the app's own
+      RollForward="minor" keeps it within major 10 (any 10.x), matching the app's own
       default roll-forward behaviour - so we don't let setup succeed on a machine where
       the app would still fail to launch. Platform x64 covers the AnyCPU app running
       64-bit (the case for effectively all modern Windows).
@@ -37,7 +37,7 @@
       Property="DOTNETRUNTIMECHECK"
       RuntimeType="desktop"
       Platform="x64"
-      Version="6.0.0"
+      Version="10.0.0"
       RollForward="minor" />
     <Launch
       Condition="Installed OR DOTNETRUNTIMECHECK = &quot;0&quot;"

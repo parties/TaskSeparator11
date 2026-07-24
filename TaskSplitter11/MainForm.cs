@@ -1,8 +1,6 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using IWshRuntimeLibrary;
 using WindowsShortcutFactory;
-using File = System.IO.File;
 
 namespace TaskSplitter11
 {
@@ -102,7 +100,7 @@ namespace TaskSplitter11
         private string GetNewLinkName(string path, string ext)
         {
             int count = 1;
-            char c = ext == "exe" ? '_' : ' ';
+            char c = ext == "exe" ? '_' : 'ï¿½';
 
             string shortcutLink = Path.Join(path, $"{c}.{ext}");
             do
