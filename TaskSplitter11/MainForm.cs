@@ -52,7 +52,7 @@ namespace TaskSplitter11
 
             //Ensure files are in thwe right place
             EnsureSplitterFilesAreAvailable(appPath, shortcutsPath);
-            
+
 
 
             //Make a copy of the Splitter exe
@@ -100,7 +100,9 @@ namespace TaskSplitter11
         private string GetNewLinkName(string path, string ext)
         {
             int count = 1;
-            char c = ext == "exe" ? '_' : '�';
+            // '\u25CF' (BLACK CIRCLE, an unobtrusive dot) is the label used for each
+            // separator shortcut; write it as an escape so the source stays ASCII-safe.
+            char c = ext == "exe" ? '_' : '\u25CF';
 
             string shortcutLink = Path.Join(path, $"{c}.{ext}");
             do
