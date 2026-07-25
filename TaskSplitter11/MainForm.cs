@@ -24,7 +24,7 @@ namespace TaskSplitter11
             SW_SHOWDEFAULT = 10,
             SW_MAX = 10
         }
-        [DllImport("shell32.dll")]
+        [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
         public static extern IntPtr ShellExecute(
             IntPtr hwnd,
             string lpszOp,
