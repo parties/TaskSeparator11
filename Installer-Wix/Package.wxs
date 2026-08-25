@@ -1,0 +1,56 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:netfx="http://wixtoolset.org/schemas/v4/wxs/netfx">
+
+  <!--
+    Task Separator 11 installer.
+
+    Converted from the legacy Visual Studio setup project (Installer\Installer.vdproj).
+    The UpgradeCode below is intentionally the SAME GUID the old .vdproj used, so this
+    package is recognised as a major upgrade of any existing Task Separator 11 install
+    (rather than installing side-by-side).
+
+    Notes:
+      * ProductCode is deliberately not set, so a fresh one is generated on every build.
+        Combined with <MajorUpgrade/> this gives proper "uninstall old, install new"
+        upgrade behaviour.
+      * WiX v6 prefers Package/@Id over @UpgradeCode for brand new products, but we keep
+        @UpgradeCode here to stay compatible with the already-shipped .vdproj installer.
+  -->
+  <Package
+    Name="Task Separator 11"
+    Manufacturer="SiCo"
+    Version="1.0.2"
+    UpgradeCode="BB2FFC59-BD81-4C0C-A847-1D88E7052BE7"
+    Scope="perMachine">
+
+    <MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeError)" />
+
+    <!--
+      Require the .NET Desktop Runtime that the app targets (net10.0-windows).
+      The check sets DOTNETRUNTIMECHECK to "0" when a compatible runtime is found.
+      RollForward="minor" keeps it within major 10 (any 10.x), matching the app's own
+      default roll-forward behaviour - so we don't let setup succeed on a machine where
+      the app would still fail to launch. Platform x64 covers the AnyCPU app running
+      64-bit (the case for effectively all modern Windows).
+    -->
+    <netfx:DotNetCompatibilityCheck
+      Property="DOTNETRUNTIMECHECK"
+      RuntimeType="desktop"
+      Platform="x64"
+      Version="10.0.0"
+      RollForward="minor" />
+    <Launch
+      Condition="Installed OR DOTNETRUNTIMECHECK = &quot;0&quot;"
+      Message="!(loc.DotNetRuntimeMissing)" />
+
+    <!-- Add/Remove Programs metadata carried over from the old setup project -->
+    <Icon Id="AppIcon.ico" SourceFile="..\TaskSplitter11\icons\icons8-taskbar-96.ico" />
+    <Property Id="ARPPRODUCTICON" Value="AppIcon.ico" />
+    <Property Id="ARPCONTACT" Value="Drummer_si" />
+
+    <Feature Id="Main" Title="Task Separator 11" Level="1">
+      <ComponentGroupRef Id="ApplicationFiles" />
+      <ComponentGroupRef Id="ApplicationShortcuts" />
+    </Feature>
+  </Package>
+</Wix>

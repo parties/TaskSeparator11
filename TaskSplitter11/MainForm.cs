@@ -1,8 +1,6 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using IWshRuntimeLibrary;
 using WindowsShortcutFactory;
-using File = System.IO.File;
 
 namespace TaskSplitter11
 {
@@ -26,7 +24,7 @@ namespace TaskSplitter11
             SW_SHOWDEFAULT = 10,
             SW_MAX = 10
         }
-        [DllImport("shell32.dll")]
+        [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
         public static extern IntPtr ShellExecute(
             IntPtr hwnd,
             string lpszOp,
@@ -54,7 +52,7 @@ namespace TaskSplitter11
 
             //Ensure files are in thwe right place
             EnsureSplitterFilesAreAvailable(appPath, shortcutsPath);
-            
+
 
 
             //Make a copy of the Splitter exe
@@ -102,7 +100,9 @@ namespace TaskSplitter11
         private string GetNewLinkName(string path, string ext)
         {
             int count = 1;
-            char c = ext == "exe" ? '_' : ' ';
+            // '\u25CF' (BLACK CIRCLE, an unobtrusive dot) is the label used for each
+            // separator shortcut; write it as an escape so the source stays ASCII-safe.
+            char c = ext == "exe" ? '_' : '\u25CF';
 
             string shortcutLink = Path.Join(path, $"{c}.{ext}");
             do

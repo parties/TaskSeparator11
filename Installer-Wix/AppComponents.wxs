@@ -1,0 +1,67 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+
+  <!--
+    Application payload.
+
+    Harvested from the TaskSplitter11 build output ($(var.TaskSplitter11.TargetDir)),
+    which contains:
+      TaskSplitter11.exe / .dll / .deps.json / .runtimeconfig.json  (the app)
+      Splitter.exe / .dll / .deps.json / .runtimeconfig.json         (copied to the
+                                                                      user's Documents
+                                                                      at runtime)
+      WindowsShortcutFactory.dll                                     (shortcut creation)
+      Shortcuts\ReadMe.txt                                           (placeholder folder)
+
+    Debug symbols (*.pdb) are excluded. The subdirectory structure (Shortcuts\) is
+    recreated automatically under INSTALLFOLDER.
+  -->
+  <Fragment>
+    <ComponentGroup Id="ApplicationFiles" Directory="INSTALLFOLDER">
+      <Files Include="$(var.TaskSplitter11.TargetDir)**">
+        <Exclude Files="$(var.TaskSplitter11.TargetDir)**.pdb" />
+      </Files>
+    </ComponentGroup>
+  </Fragment>
+
+  <!--
+    Desktop + Start Menu shortcuts to the main executable (both were present in the old
+    .vdproj). These are non-advertised shortcuts pointing at the installed exe. Each lives
+    in its own component keyed by a per-user (HKCU) registry value.
+
+    The HKCU keypath makes each shortcut per-user (installed for the user running setup),
+    which is the standard WiX shortcut pattern and satisfies ICE57. DesktopFolder and
+    ProgramMenuFolder therefore resolve to the current user's profile rather than the
+    "All Users" profile the old .vdproj used.
+  -->
+  <Fragment>
+    <ComponentGroup Id="ApplicationShortcuts">
+      <Component Id="StartMenuShortcut" Directory="ProgramMenuFolder">
+        <Shortcut Id="StartMenuShortcut"
+                  Name="Task Separator 11"
+                  Target="[INSTALLFOLDER]TaskSplitter11.exe"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon="AppIcon.ico" />
+        <RegistryValue Root="HKCU"
+                       Key="Software\SiCo\Task Separator 11"
+                       Name="StartMenuShortcut"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes" />
+      </Component>
+
+      <Component Id="DesktopShortcut" Directory="DesktopFolder">
+        <Shortcut Id="DesktopShortcut"
+                  Name="Task Separator 11"
+                  Target="[INSTALLFOLDER]TaskSplitter11.exe"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon="AppIcon.ico" />
+        <RegistryValue Root="HKCU"
+                       Key="Software\SiCo\Task Separator 11"
+                       Name="DesktopShortcut"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>
